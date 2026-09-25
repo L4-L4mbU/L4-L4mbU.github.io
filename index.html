@@ -1,0 +1,1005 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050711"><title>MURMU MODS</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --bg: #050711;
+        --panel: rgba(15, 18, 34, 0.68);
+        --panel2: rgba(22, 27, 48, 0.55);
+
+        --text: #f4f7ff;
+        --muted: #8f9ab2;
+
+        --blue: #4db8ff;
+        --purple: #9d6cff;
+
+        --border: rgba(100, 177, 255, 0.22);
+        --glow: rgba(77, 184, 255, 0.16);
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        min-height: 100vh;
+        color: var(--text);
+        font-family: Arial, Helvetica, sans-serif;
+
+        background:
+            radial-gradient(
+                circle at 10% 5%,
+                rgba(55, 130, 255, 0.17),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 90% 15%,
+                rgba(150, 75, 255, 0.13),
+                transparent 28%
+            ),
+            radial-gradient(
+                circle at 50% 100%,
+                rgba(0, 200, 255, 0.08),
+                transparent 35%
+            ),
+            var(--bg);
+
+        overflow-x: hidden;
+    }
+
+    /* Background glow */
+
+    body::before,
+    body::after {
+        content: "";
+        position: fixed;
+        width: 280px;
+        height: 280px;
+        border-radius: 50%;
+        filter: blur(90px);
+        pointer-events: none;
+        z-index: -1;
+    }
+
+    body::before {
+        background: rgba(53, 151, 255, 0.08);
+        top: 30%;
+        left: -160px;
+    }
+
+    body::after {
+        background: rgba(157, 108, 255, 0.07);
+        right: -160px;
+        bottom: 10%;
+    }
+
+    /* Header */
+
+    header {
+        position: sticky;
+        top: 12px;
+        z-index: 100;
+
+        width: calc(100% - 28px);
+        max-width: 1120px;
+        margin: 12px auto 0;
+        padding: 11px 13px 11px 16px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        background: rgba(9, 12, 25, 0.72);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+
+        box-shadow:
+            0 15px 45px rgba(0, 0, 0, 0.3),
+            0 0 25px rgba(77, 184, 255, 0.04);
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+
+        color: var(--text);
+        text-decoration: none;
+    }
+
+    .brand-logo {
+        width: 43px;
+        height: 43px;
+        object-fit: contain;
+        border-radius: 13px;
+
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    .brand-name {
+        font-size: 17px;
+        font-weight: 800;
+        letter-spacing: 1.2px;
+    }
+
+    .brand-name span {
+        color: var(--blue);
+    }
+
+    /* Menu button */
+
+    .menu-button {
+        width: 43px;
+        height: 43px;
+
+        border: 1px solid var(--border);
+        border-radius: 13px;
+
+        background: rgba(34, 43, 70, 0.45);
+        color: var(--text);
+
+        font-size: 20px;
+        cursor: pointer;
+
+        transition: 0.25s ease;
+    }
+
+    .menu-button:hover,
+    .menu-button.active {
+        border-color: rgba(77, 184, 255, 0.65);
+        box-shadow: 0 0 18px var(--glow);
+    }
+
+    /* Social menu */
+
+    .social-menu {
+        position: fixed;
+        top: 72px;
+        right: 14px;
+        z-index: 200;
+
+        width: 220px;
+        padding: 10px;
+
+        background: rgba(10, 14, 29, 0.88);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+
+        box-shadow:
+            0 18px 50px rgba(0, 0, 0, 0.4),
+            0 0 25px rgba(77, 184, 255, 0.08);
+
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px) scale(0.97);
+
+        transition: 0.22s ease;
+    }
+
+    .social-menu.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
+    }
+
+    .menu-title {
+        padding: 9px 10px 7px;
+
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+    }
+
+    .social-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        padding: 12px 10px;
+        margin: 3px 0;
+
+        color: var(--text);
+        text-decoration: none;
+
+        border-radius: 12px;
+
+        transition: 0.2s ease;
+    }
+
+    .social-link:hover {
+        background: rgba(77, 184, 255, 0.09);
+        color: #fff;
+    }
+
+    .social-icon {
+        width: 32px;
+        height: 32px;
+
+        display: grid;
+        place-items: center;
+
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 9px;
+
+        background: rgba(255,255,255,0.04);
+    }
+
+    .social-text {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .social-arrow {
+        margin-left: auto;
+        color: var(--muted);
+    }
+
+    /* Main */
+
+    main {
+        width: calc(100% - 28px);
+        max-width: 1120px;
+        margin: auto;
+    }
+
+    /* Hero */
+
+    .hero {
+        padding: 90px 10px 55px;
+        text-align: center;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+
+        padding: 7px 13px;
+        margin-bottom: 20px;
+
+        color: #9fd8ff;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+
+        border: 1px solid rgba(77,184,255,0.22);
+        border-radius: 100px;
+
+        background: rgba(77,184,255,0.06);
+    }
+
+    .hero-badge::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--blue);
+        box-shadow: 0 0 10px var(--blue);
+    }
+
+    .hero h1 {
+        font-size: clamp(38px, 9vw, 68px);
+        line-height: 1;
+
+        letter-spacing: -2px;
+
+        background:
+            linear-gradient(
+                100deg,
+                #ffffff 15%,
+                #8dd3ff 55%,
+                #ad82ff 90%
+            );
+
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+        max-width: 530px;
+        margin: 20px auto 0;
+
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+    /* Search */
+
+    .search-wrapper {
+        position: relative;
+        max-width: 650px;
+        margin: 31px auto 0;
+    }
+
+    .search-box {
+        width: 100%;
+        height: 58px;
+
+        padding: 0 20px 0 52px;
+
+        color: var(--text);
+        font-size: 15px;
+
+        background: rgba(13, 17, 33, 0.72);
+
+        border: 1px solid var(--border);
+        border-radius: 17px;
+
+        outline: none;
+
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+
+        transition: 0.25s ease;
+    }
+
+    .search-box:focus {
+        border-color: rgba(77,184,255,0.6);
+
+        box-shadow:
+            0 0 0 3px rgba(77,184,255,0.05),
+            0 0 25px rgba(77,184,255,0.08);
+    }
+
+    .search-box::placeholder {
+        color: #66718a;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        color: #83ccff;
+        font-size: 20px;
+        pointer-events: none;
+    }
+
+    /* APK section */
+
+    .apk-section {
+        padding: 25px 0 75px;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        margin-bottom: 18px;
+    }
+
+    .section-title h2 {
+        font-size: 21px;
+        letter-spacing: -0.3px;
+    }
+
+    .apk-count {
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+    /* Cards */
+
+    .apk-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+    }
+
+    .apk-card {
+        position: relative;
+
+        display: flex;
+        align-items: center;
+        gap: 14px;
+
+        min-width: 0;
+        padding: 16px;
+
+        color: var(--text);
+        text-decoration: none;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(28, 37, 65, 0.62),
+                rgba(10, 14, 27, 0.74)
+            );
+
+        border: 1px solid var(--border);
+        border-radius: 19px;
+
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+
+        overflow: hidden;
+
+        transition:
+            transform 0.25s ease,
+            border-color 0.25s ease,
+            box-shadow 0.25s ease;
+    }
+
+    .apk-card::before {
+        content: "";
+
+        position: absolute;
+        width: 100px;
+        height: 100px;
+
+        top: -60px;
+        right: -50px;
+
+        border-radius: 50%;
+
+        background: rgba(77,184,255,0.08);
+        filter: blur(25px);
+    }
+
+    .apk-card:hover {
+        transform: translateY(-4px);
+
+        border-color: rgba(77,184,255,0.52);
+
+        box-shadow:
+            0 15px 35px rgba(0,0,0,0.28),
+            0 0 22px rgba(77,184,255,0.07);
+    }
+
+    .apk-icon {
+        width: 58px;
+        height: 58px;
+
+        flex-shrink: 0;
+
+        object-fit: cover;
+
+        border-radius: 15px;
+
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .apk-info {
+        min-width: 0;
+        flex: 1;
+    }
+
+    .apk-name {
+        margin-bottom: 6px;
+
+        font-size: 15px;
+        font-weight: 700;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .apk-version {
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+    .view-arrow {
+        color: #83ccff;
+        font-size: 21px;
+    }
+
+    /* No results */
+
+    .no-results {
+        display: none;
+
+        padding: 38px;
+
+        text-align: center;
+        color: var(--muted);
+
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+    }
+
+    /* Footer */
+
+    footer {
+        width: calc(100% - 28px);
+        max-width: 1120px;
+
+        margin: auto;
+        padding: 25px 0 35px;
+
+        text-align: center;
+
+        border-top: 1px solid rgba(100,177,255,0.1);
+
+        color: #647088;
+        font-size: 12px;
+    }
+
+    footer strong {
+        color: #8291aa;
+    }
+
+    /* Responsive */
+
+    @media (max-width: 850px) {
+        .apk-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 570px) {
+        header {
+            top: 8px;
+            margin-top: 8px;
+        }
+
+        .hero {
+            padding-top: 72px;
+        }
+
+        .hero h1 {
+            letter-spacing: -1.5px;
+        }
+
+        .apk-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .social-menu {
+            top: 66px;
+            right: 10px;
+        }
+    }
+</style>
+
+</head><body><!-- HEADER -->
+
+<header>
+
+    <a href="index.html" class="brand">
+
+        <!-- Replace with your hosted logo -->
+        <img
+            class="brand-logo"
+            src="https://imgdb.in/i/gKk4IUvZRK.jpg"
+            alt="MURMU MODS Logo"
+        >
+
+        <span class="brand-name">
+            MURMU <span>MODS</span>
+        </span>
+
+    </a>
+
+    <button
+        class="menu-button"
+        id="menuButton"
+        aria-label="Open social links"
+        aria-expanded="false"
+    >
+        ☰
+    </button>
+
+</header>
+
+
+<!-- SOCIAL MENU -->
+
+<div class="social-menu" id="socialMenu">
+
+    <div class="menu-title">
+        Connect with us
+    </div>
+
+    <!-- Replace the example URLs with your real links -->
+
+    <a
+        class="social-link"
+        href="https://example.com/telegram"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        <span class="social-icon">✈</span>
+        <span class="social-text">Telegram</span>
+        <span class="social-arrow">›</span>
+    </a>
+
+    <a
+        class="social-link"
+        href="https://example.com/youtube"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        <span class="social-icon">▶</span>
+        <span class="social-text">YouTube</span>
+        <span class="social-arrow">›</span>
+    </a>
+
+    <a
+        class="social-link"
+        href="https://example.com/instagram"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        <span class="social-icon">◎</span>
+        <span class="social-text">Instagram</span>
+        <span class="social-arrow">›</span>
+    </a>
+
+    <a
+        class="social-link"
+        href="https://example.com/github"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        <span class="social-icon">◈</span>
+        <span class="social-text">GitHub</span>
+        <span class="social-arrow">›</span>
+    </a>
+
+</div>
+
+
+<main>
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="hero-badge">
+            MODDED APPS • TOOLS • UPDATES
+        </div>
+
+        <h1>
+            MURMU MODS
+        </h1>
+
+        <p>
+            Discover useful modified apps and tools,
+            collected in one clean and simple place.
+        </p>
+
+        <div class="search-wrapper">
+
+            <span class="search-icon">⌕</span>
+
+            <input
+                type="search"
+                id="searchInput"
+                class="search-box"
+                placeholder="Search for an APK..."
+                autocomplete="off"
+            >
+
+        </div>
+
+    </section>
+
+
+    <!-- APK LIST -->
+
+    <!-- APK LIST -->
+
+    <section class="apk-section">
+
+        <div class="section-title">
+
+            <h2>
+                Latest APKs
+            </h2>
+
+            <span
+                class="apk-count"
+                id="apkCount"
+            >
+                0 APKs
+            </span>
+
+        </div>
+
+
+        <div
+            class="apk-grid"
+            id="apkGrid"
+        >
+
+            <!-- APK_LIST_START -->
+
+
+            <!-- YouTube -->
+
+            <a
+                class="apk-card"
+                href="apps/YouTube.html"
+                data-name="youtube"
+            >
+
+                <img
+                    class="apk-icon"
+                    src="https://imgdb.in/i/gTPaHnsJBC.png"
+                    alt="YouTube"
+                >
+
+                <div class="apk-info">
+
+                    <div class="apk-name">
+                        YouTube
+                    </div>
+
+                    <div class="apk-version">
+                        Version 20.xx
+                    </div>
+
+                </div>
+
+                <span class="view-arrow">
+                    ›
+                </span>
+
+            </a>
+
+
+            <!-- Lightroom -->
+
+            <a
+                class="apk-card"
+                href="apps/Lightroom.html"
+                data-name="lightroom"
+            >
+
+                <img
+                    class="apk-icon"
+                    src="https://imgdb.in/i/gUH8cjXmGA.png"
+                    alt="Lightroom"
+                >
+
+                <div class="apk-info">
+
+                    <div class="apk-name">
+                        Lightroom
+                    </div>
+
+                    <div class="apk-version">
+                        Version 9.xx
+                    </div>
+
+                </div>
+
+                <span class="view-arrow">
+                    ›
+                </span>
+
+            </a>
+
+
+            <!-- Instagram -->
+
+            <a
+                class="apk-card"
+                href="apps/Instagram.html"
+                data-name="instagram"
+            >
+
+                <img
+                    class="apk-icon"
+                    src="https://your-image-host.com/instagram.png"
+                    alt="Instagram"
+                >
+
+                <div class="apk-info">
+
+                    <div class="apk-name">
+                        Instagram
+                    </div>
+
+                    <div class="apk-version">
+                        Version 3xx
+                    </div>
+
+                </div>
+
+                <span class="view-arrow">
+                    ›
+                </span>
+
+            </a>
+
+
+            <!-- APK_LIST_END -->
+
+        </div>
+
+
+        <div
+            class="no-results"
+            id="noResults"
+        >
+            No APK found.
+        </div>
+
+    </section>
+    
+    <!-- APK_LIST_END -->
+
+</main>
+
+
+<!-- FOOTER -->
+
+<footer>
+    © 2026 <strong>MURMU MODS</strong>. All rights reserved.
+</footer>
+
+
+<script>
+
+    /* -------------------------
+       SEARCH
+    ------------------------- */
+
+    const searchInput =
+        document.getElementById("searchInput");
+
+    const apkCards =
+        document.querySelectorAll(".apk-card");
+
+    const noResults =
+        document.getElementById("noResults");
+
+    const apkCount =
+        document.getElementById("apkCount");
+
+
+    function updateCount() {
+
+        let visibleCount = 0;
+
+        apkCards.forEach(card => {
+
+            if (card.style.display !== "none") {
+                visibleCount++;
+            }
+
+        });
+
+        apkCount.textContent =
+            visibleCount +
+            (visibleCount === 1 ? " APK" : " APKs");
+    }
+
+
+    searchInput.addEventListener(
+        "input",
+        function () {
+
+            const query =
+                this.value.toLowerCase().trim();
+
+            let found = false;
+
+
+            apkCards.forEach(card => {
+
+                const name =
+                    card.dataset.name.toLowerCase();
+
+                if (name.includes(query)) {
+
+                    card.style.display = "flex";
+                    found = true;
+
+                } else {
+
+                    card.style.display = "none";
+
+                }
+
+            });
+
+
+            noResults.style.display =
+                found ? "none" : "block";
+
+            updateCount();
+
+        }
+    );
+
+
+    /* -------------------------
+       SOCIAL MENU
+    ------------------------- */
+
+    const menuButton =
+        document.getElementById("menuButton");
+
+    const socialMenu =
+        document.getElementById("socialMenu");
+
+
+    menuButton.addEventListener(
+        "click",
+        function (event) {
+
+            event.stopPropagation();
+
+            const isOpen =
+                socialMenu.classList.toggle("show");
+
+            menuButton.classList.toggle(
+                "active",
+                isOpen
+            );
+
+            menuButton.setAttribute(
+                "aria-expanded",
+                isOpen
+            );
+
+            menuButton.textContent =
+                isOpen ? "×" : "☰";
+
+        }
+    );
+
+
+    /* Close menu when clicking outside */
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                !socialMenu.contains(event.target) &&
+                !menuButton.contains(event.target)
+            ) {
+
+                socialMenu.classList.remove("show");
+
+                menuButton.classList.remove("active");
+
+                menuButton.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+                menuButton.textContent = "☰";
+
+            }
+
+        }
+    );
+
+
+    /* Initial count */
+
+    updateCount();
+
+</script>
+
+</body>
+</html>
