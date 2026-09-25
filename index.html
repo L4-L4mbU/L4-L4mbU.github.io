@@ -619,45 +619,45 @@
 
     <a
         class="social-link"
-        href="https://example.com/telegram"
+        href="https://www.instagram.com/_bhak__bsdk"
         target="_blank"
         rel="noopener noreferrer"
     >
         <span class="social-icon">✈</span>
+        <span class="social-text">Instagram [Main]</span>
+        <span class="social-arrow">›</span>
+    </a>
+
+    <a
+        class="social-link"
+        href="https://www.instagram.com/a_hopon_babu_"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        <span class="social-icon">▶</span>
+        <span class="social-text">Instagram [2nd]</span>
+        <span class="social-arrow">›</span>
+    </a>
+
+    <a
+        class="social-link"
+        href="https://t.me/marang_da"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        <span class="social-icon">◎</span>
         <span class="social-text">Telegram</span>
         <span class="social-arrow">›</span>
     </a>
 
     <a
         class="social-link"
-        href="https://example.com/youtube"
-        target="_blank"
-        rel="noopener noreferrer"
-    >
-        <span class="social-icon">▶</span>
-        <span class="social-text">YouTube</span>
-        <span class="social-arrow">›</span>
-    </a>
-
-    <a
-        class="social-link"
-        href="https://example.com/instagram"
-        target="_blank"
-        rel="noopener noreferrer"
-    >
-        <span class="social-icon">◎</span>
-        <span class="social-text">Instagram</span>
-        <span class="social-arrow">›</span>
-    </a>
-
-    <a
-        class="social-link"
-        href="https://example.com/github"
+        href="https://13ijay.github.io"
         target="_blank"
         rel="noopener noreferrer"
     >
         <span class="social-icon">◈</span>
-        <span class="social-text">GitHub</span>
+        <span class="social-text">Myself</span>
         <span class="social-arrow">›</span>
     </a>
 
@@ -939,6 +939,26 @@
 
     updateCount();
 
+</script>
+
+    <audio id="bgMusic" loop preload="auto">
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const bgMusic = document.getElementById("bgMusic");
+
+function startMusic() {
+    bgMusic.play()
+        .then(() => {
+            document.removeEventListener("pointerdown", startMusic);
+        })
+        .catch(() => {
+            // Keep listener active if playback fails
+        });
+}
+
+document.addEventListener("pointerdown", startMusic);
 </script>
 
 </body>
