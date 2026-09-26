@@ -723,6 +723,100 @@
   }
         }
     }
+    /* =========================
+   VISITOR ANALYTICS
+========================= */
+
+.visitor-analytics {
+    width: calc(100% - 28px);
+    max-width: 760px;
+    margin: 0 auto 18px;
+    padding: 16px;
+
+    text-align: center;
+
+    background: rgba(13, 17, 33, 0.62);
+    border: 1px solid rgba(100, 177, 255, 0.16);
+    border-radius: 18px;
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow: 0 12px 35px rgba(0,0,0,.18);
+}
+
+.visitor-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    margin-bottom: 13px;
+}
+
+.visitor-title h3 {
+    font-size: 12px;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    color: #9fd8ff;
+}
+
+.visitor-status {
+    font-size: 9px;
+    color: #6f7d96;
+}
+
+.visitor-status.connected {
+    color: #6fffb0;
+}
+
+.visitor-status.error {
+    color: #ff8097;
+}
+
+.visitor-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px;
+}
+
+.visitor-stat {
+    padding: 10px 6px;
+    border-radius: 12px;
+
+    background: rgba(255,255,255,.025);
+    border: 1px solid rgba(255,255,255,.055);
+}
+
+.visitor-stat b {
+    display: block;
+    color: #f4f7ff;
+    font-size: 17px;
+    line-height: 1.2;
+}
+
+.visitor-stat span {
+    display: block;
+    margin-top: 4px;
+
+    color: #68758d;
+    font-size: 9px;
+
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+@media (max-width: 420px) {
+
+    .visitor-stats {
+        gap: 6px;
+    }
+
+    .visitor-stat b {
+        font-size: 15px;
+    }
+
+}
+    
 </style>
 
 </head>
@@ -1240,10 +1334,62 @@
 
 <!-- FOOTER -->
 
+<!-- VISITOR ANALYTICS -->
+
+<section class="visitor-analytics">
+
+    <div class="visitor-title">
+
+        <h3>Visitor Analytics</h3>
+
+        <span
+            class="visitor-status"
+            id="visitorStatus"
+        >
+            ● Connecting...
+        </span>
+
+    </div>
+
+
+    <div class="visitor-stats">
+
+        <div class="visitor-stat">
+
+            <b id="visitorTotal">0</b>
+
+            <span>Total Unique</span>
+
+        </div>
+
+
+        <div class="visitor-stat">
+
+            <b id="visitorToday">0</b>
+
+            <span>Today</span>
+
+        </div>
+
+
+        <div class="visitor-stat">
+
+            <b id="visitorLive">0</b>
+
+            <span>Live Now</span>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
+
 <footer>
     © 2026 <strong>MURMU MODS</strong>. All rights reserved.
 </footer>
-
 
 <script>
 
@@ -1468,6 +1614,500 @@ document.addEventListener("pointerdown", function(event) {
   announcement.style.display = "none";
             }
         </script>
+        
+        <!-- FIREBASE VISITOR ANALYTICS -->
+
+<script type="module">
+
+import {
+    initializeApp,
+    getApps,
+    getApp
+} from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+import {
+    getDatabase,
+    ref,
+    get,
+    set,
+    update,
+    onValue,
+    onDisconnect,
+    runTransaction,
+    serverTimestamp
+} from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+
+/* =========================
+   FIREBASE CONFIG
+========================= */
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyCd6e-psGHsyf_fBRPZ5FZCRwxE96GzuUU",
+
+    authDomain:
+        "visitor-c2be9.firebaseapp.com",
+
+    databaseURL:
+        "https://visitor-c2be9-default-rtdb.firebaseio.com",
+
+    projectId:
+        "visitor-c2be9",
+
+    storageBucket:
+        "visitor-c2be9.firebasestorage.app",
+
+    messagingSenderId:
+        "937049664378",
+
+    appId:
+        "1:937049664378:web:e086580c4eccbbe62d84c3"
+
+};
+
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+const APP_NAME =
+    "murmuVisitorAnalytics";
+
+const VISITOR_KEY =
+    "murmu_mods_visitor_id";
+
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const statusEl =
+    document.getElementById("visitorStatus");
+
+const totalEl =
+    document.getElementById("visitorTotal");
+
+const todayEl =
+    document.getElementById("visitorToday");
+
+const liveEl =
+    document.getElementById("visitorLive");
+
+
+
+/* =========================
+   STATUS
+========================= */
+
+function setStatus(text, state = "") {
+
+    statusEl.textContent =
+        "● " + text;
+
+    statusEl.className =
+        "visitor-status " + state;
+
+}
+
+
+
+/* =========================
+   VISITOR ID
+========================= */
+
+function getVisitorId() {
+
+    let id =
+        localStorage.getItem(VISITOR_KEY);
+
+
+    if (!id) {
+
+        if (crypto.randomUUID) {
+
+            id =
+                crypto.randomUUID();
+
+        } else {
+
+            id =
+                "v-" +
+                Date.now() +
+                "-" +
+                Math.random()
+                    .toString(36)
+                    .slice(2);
+
+        }
+
+
+        localStorage.setItem(
+            VISITOR_KEY,
+            id
+        );
+
+    }
+
+
+    return id;
+
+}
+
+
+
+/* =========================
+   INDIA DATE
+========================= */
+
+function indiaDate() {
+
+    return new Intl.DateTimeFormat(
+        "en-CA",
+        {
+            timeZone: "Asia/Kolkata",
+
+            year: "numeric",
+
+            month: "2-digit",
+
+            day: "2-digit"
+        }
+    ).format(new Date());
+
+}
+
+
+
+/* =========================
+   NUMBER FORMAT
+========================= */
+
+function formatNumber(value) {
+
+    return Number(
+        value || 0
+    ).toLocaleString("en-IN");
+
+}
+
+
+
+/* =========================
+   MAIN
+========================= */
+
+async function startVisitorAnalytics() {
+
+    try {
+
+        /* Firebase app */
+
+        const app =
+            getApps().some(
+                a => a.name === APP_NAME
+            )
+
+            ? getApp(APP_NAME)
+
+            : initializeApp(
+                firebaseConfig,
+                APP_NAME
+            );
+
+
+        const db =
+            getDatabase(app);
+
+
+        /* Visitor information */
+
+        const visitorId =
+            getVisitorId();
+
+
+        const today =
+            indiaDate();
+
+
+
+        /* Database paths */
+
+        const statsRef =
+            ref(
+                db,
+                "visitors/analytics/stats"
+            );
+
+
+        const userRef =
+            ref(
+                db,
+                "visitors/analytics/users/" +
+                visitorId
+            );
+
+
+        const todayRef =
+            ref(
+                db,
+                "visitors/analytics/days/" +
+                today +
+                "/" +
+                visitorId
+            );
+
+
+        const liveRef =
+            ref(
+                db,
+                "visitors/analytics/live/" +
+                visitorId
+            );
+
+
+
+        /* =========================
+           TOTAL UNIQUE
+        ========================= */
+
+        const userSnap =
+            await get(userRef);
+
+
+        if (!userSnap.exists()) {
+
+            await set(
+                userRef,
+                {
+                    firstSeen:
+                        serverTimestamp()
+                }
+            );
+
+
+            await runTransaction(
+                statsRef,
+                current => {
+
+                    current =
+                        current || {};
+
+                    current.totalUnique =
+                        Number(
+                            current.totalUnique || 0
+                        ) + 1;
+
+
+                    return current;
+
+                }
+            );
+
+        }
+
+
+
+        /* =========================
+           TODAY UNIQUE
+        ========================= */
+
+        const todaySnap =
+            await get(todayRef);
+
+
+        if (!todaySnap.exists()) {
+
+            await set(
+                todayRef,
+                true
+            );
+
+        }
+
+
+
+        /* =========================
+           LIVE VISITOR
+        ========================= */
+
+        await onDisconnect(
+            liveRef
+        ).remove();
+
+
+        await set(
+            liveRef,
+            {
+                lastSeen:
+                    serverTimestamp()
+            }
+        );
+
+
+
+        /* Heartbeat */
+
+        setInterval(
+            async () => {
+
+                try {
+
+                    await update(
+                        liveRef,
+                        {
+                            lastSeen:
+                                serverTimestamp()
+                        }
+                    );
+
+                } catch (_) {}
+
+            },
+
+            30000
+        );
+
+
+
+        /* =========================
+           TOTAL
+        ========================= */
+
+        onValue(
+            statsRef,
+            snapshot => {
+
+                const data =
+                    snapshot.val() || {};
+
+
+                totalEl.textContent =
+                    formatNumber(
+                        data.totalUnique
+                    );
+
+            }
+        );
+
+
+
+        /* =========================
+           TODAY
+        ========================= */
+
+        const todayCollectionRef =
+            ref(
+                db,
+                "visitors/analytics/days/" +
+                today
+            );
+
+
+        onValue(
+            todayCollectionRef,
+            snapshot => {
+
+                const data =
+                    snapshot.val() || {};
+
+
+                todayEl.textContent =
+                    formatNumber(
+                        Object.keys(data).length
+                    );
+
+            }
+        );
+
+
+
+        /* =========================
+           LIVE NOW
+        ========================= */
+
+        const liveCollectionRef =
+            ref(
+                db,
+                "visitors/analytics/live"
+            );
+
+
+        onValue(
+            liveCollectionRef,
+            snapshot => {
+
+                const data =
+                    snapshot.val() || {};
+
+
+                const now =
+                    Date.now();
+
+
+                const count =
+                    Object.values(data)
+                        .filter(item => {
+
+                            const timestamp =
+                                item &&
+                                Number(
+                                    item.lastSeen
+                                );
+
+
+                            return (
+                                timestamp &&
+                                now - timestamp <=
+                                90000
+                            );
+
+                        })
+                        .length;
+
+
+                liveEl.textContent =
+                    formatNumber(count);
+
+            }
+        );
+
+
+
+        setStatus(
+            "Firebase connected",
+            "connected"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Visitor analytics:",
+            error
+        );
+
+
+        setStatus(
+            "Analytics unavailable",
+            "error"
+        );
+
+    }
+
+}
+
+
+startVisitorAnalytics();
+
+  </script>
 
 </body>
 </html>
