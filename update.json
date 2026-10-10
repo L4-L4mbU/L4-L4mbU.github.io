@@ -1,0 +1,9 @@
+
+{
+  "version": "1.0.1",
+  "versionCode": 2,
+  "title": "New update available!",
+  "changelog": "Bug fixes and UI improvements.",
+  "downloadUrl": "https://github.com/USERNAME/REPOSITORY/releases/latest",
+  "forceUpdate": false
+}
