@@ -1,9 +1,6 @@
 
 {
-  "version": "1.0.1",
-  "versionCode": 1561059343,
-  "title": "New update available!",
-  "changelog": "Bug fixes and UI improvements.",
-  "downloadUrl": "https://github.com/USERNAME/REPOSITORY/releases/latest",
-  "forceUpdate": false
+  "versionName": "50020126",
+  "cancel": false,
+  "link": "https://Telegram.me/+k-KHcxCn4OgwZmFl"
 }
