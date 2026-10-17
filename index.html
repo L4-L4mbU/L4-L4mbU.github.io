@@ -1,0 +1,702 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#e8e4dc" id="themeColor"><title>MURMU MODS</title>
+<script>try{var t=localStorage.getItem("murmu_mods_theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;0,700;1,500&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#e8e4dc;--paper:#f4f1eb;--ink:#16151a;--soft:#5f5b57;--red:#6e1423;
+  --line:rgba(22,21,26,.2);--ok:#2f6b3f;--bad:#a12b2b;--shade:rgba(22,21,26,.14);--veil:rgba(22,21,26,.74);
+  color-scheme:light;
+  --serif:'Bodoni Moda','Didot','Bodoni 72',Georgia,serif;
+  --sans:'Hanken Grotesk','Helvetica Neue',Arial,sans-serif;
+}
+/* Dark theme: follows the system unless the visitor picks light or dark */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#121114;--paper:#1c1a1e;--ink:#ece6da;--soft:#a7a29a;--red:#e0828d;
+    --line:rgba(236,230,218,.2);--ok:#7cc48f;--bad:#ea8f8f;--shade:rgba(0,0,0,.5);--veil:rgba(0,0,0,.78);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121114;--paper:#1c1a1e;--ink:#ece6da;--soft:#a7a29a;--red:#e0828d;
+  --line:rgba(236,230,218,.2);--ok:#7cc48f;--bad:#ea8f8f;--shade:rgba(0,0,0,.5);--veil:rgba(0,0,0,.78);
+  color-scheme:dark;
+}
+html{scroll-behavior:smooth}
+body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:var(--sans);overflow-x:hidden}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+
+/* Top bar */
+header{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--ink)}
+.header-inner{max-width:1180px;margin:auto;padding:12px 22px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px;color:var(--ink);text-decoration:none}
+.brand-logo{width:38px;height:38px;object-fit:contain;border:1px solid var(--ink);background:var(--paper)}
+.brand-name{font-family:var(--serif);font-size:19px;font-weight:700;letter-spacing:3px}
+.brand-name span{color:var(--red)}
+.header-actions{display:flex;gap:8px}
+.menu-button{display:grid;place-items:center;width:40px;height:40px;border:1px solid var(--ink);background:transparent;color:var(--ink);font-size:19px;cursor:pointer;transition:.2s ease}
+.menu-button:hover,.menu-button.active{background:var(--ink);color:var(--paper)}
+.menu-button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+/* Social menu */
+.social-menu{position:fixed;top:66px;right:16px;z-index:200;width:240px;padding:8px 14px 10px;background:var(--paper);
+  border:1px solid var(--ink);box-shadow:6px 6px 0 var(--shade);
+  opacity:0;visibility:hidden;transform:translateY(-6px);transition:.2s ease}
+.social-menu.show{opacity:1;visibility:visible;transform:none}
+.menu-title{padding:10px 0;margin-bottom:4px;border-bottom:1px solid var(--line);font-family:var(--serif);font-style:italic;font-size:18px}
+.social-link{display:flex;align-items:center;gap:12px;padding:11px 0;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line);transition:.2s ease}
+.social-link:last-child{border-bottom:0}
+.social-link:hover{color:var(--red);padding-left:6px}
+.social-icon{width:20px;height:20px;display:grid;place-items:center}
+.social-icon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.social-text{font-size:14.5px;font-weight:500}
+.social-arrow{margin-left:auto}
+
+/* Layout: left column (title, search, visitors) / right column (catalogue) */
+.layout{max-width:1180px;margin:auto;padding:0 22px;display:grid;
+  grid-template-columns:360px minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:72px;
+  grid-template-areas:"hero list" "stats list"}
+
+/* Hero */
+.hero{grid-area:hero;padding:60px 0 34px}
+.hero-badge{display:flex;align-items:center;gap:12px;margin-bottom:22px;color:var(--red);font-size:13.5px;font-weight:600;letter-spacing:.3px}
+.hero-badge::before{content:"";width:30px;height:2px;background:var(--red)}
+.hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(54px,7.4vw,84px);line-height:.95;letter-spacing:-1px}
+.hero p{max-width:32ch;margin-top:22px;color:var(--soft);font-size:16px;line-height:1.7}
+
+/* Search */
+.search-wrapper{position:relative;margin-top:34px}
+.search-box{width:100%;height:50px;padding:0 0 0 34px;color:var(--ink);font:400 16px var(--sans);background:transparent;
+  border:0;border-bottom:1px solid var(--ink);border-radius:0;outline:none;transition:.2s ease}
+.search-box:focus{border-bottom-color:var(--red);box-shadow:0 2px 0 var(--red)}
+.search-box::placeholder{color:var(--soft);opacity:.8}
+.search-icon{position:absolute;left:0;top:50%;transform:translateY(-50%);display:flex;pointer-events:none}
+.search-icon svg{width:19px;height:19px;fill:none;stroke:var(--ink);stroke-width:1.7;stroke-linecap:round}
+
+/* Catalogue */
+.apk-section{grid-area:list;padding:60px 0 70px}
+.section-title{display:flex;align-items:baseline;justify-content:space-between;padding-top:14px;border-top:3px double var(--ink);margin-bottom:6px}
+.section-title h2{font-family:var(--serif);font-size:30px;font-weight:700}
+.apk-count{color:var(--soft);font-size:13.5px;font-weight:500}
+.apk-grid{display:block}
+.apk-card{display:flex;align-items:center;gap:20px;min-width:0;padding:20px 6px;color:var(--ink);text-decoration:none;
+  border-bottom:1px solid var(--line);transition:background .2s ease,padding .2s ease}
+.apk-card:hover{background:var(--paper);padding-left:16px;padding-right:16px}
+.apk-icon{width:62px;height:62px;flex-shrink:0;object-fit:cover;border-radius:12px;border:1px solid var(--line)}
+.apk-info{flex:1;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) 140px 200px;column-gap:18px;align-items:center}
+.apk-name{grid-column:1;grid-row:1;font-family:var(--serif);font-size:23px;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.apk-version{grid-column:1;grid-row:2;margin-top:3px;color:var(--soft);font-size:14px}
+.apk-tag{grid-column:2;grid-row:1/span 2;justify-self:start;padding:3px 11px;border:1px solid var(--red);color:var(--red);font-size:13px;font-weight:600;letter-spacing:.2px}
+.apk-updated{grid-column:3;grid-row:1/span 2;color:var(--soft);font-size:13px;line-height:1.4}
+.view-arrow{font-family:var(--serif);font-size:30px;line-height:1;transition:transform .2s ease,color .2s ease}
+.apk-card:hover .view-arrow{color:var(--red);transform:translateX(4px)}
+.no-results{display:none;padding:44px 0;text-align:center;color:var(--soft);font-family:var(--serif);font-style:italic;font-size:21px;border-bottom:1px solid var(--line)}
+
+/* Visitor analytics (ledger) */
+.visitor-analytics{grid-area:stats;align-self:start;margin-bottom:60px;padding-top:14px;border-top:3px double var(--ink)}
+.visitor-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.visitor-title h3{font-family:var(--serif);font-size:22px;font-weight:700}
+.visitor-status{font-size:12.5px;color:var(--soft)}
+.visitor-status.connected{color:var(--ok)}
+.visitor-status.error{color:var(--bad)}
+.visitor-stats{display:block}
+.visitor-stat{display:flex;flex-direction:row-reverse;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px dotted var(--line)}
+.visitor-stat b{font-family:var(--serif);font-size:28px;font-weight:700;line-height:1.1}
+.visitor-stat span{color:var(--soft);font-size:14px}
+
+/* Footer */
+footer{max-width:1180px;margin:auto;padding:22px;border-top:1px solid var(--ink);color:var(--soft);font-size:13.5px}
+footer strong{color:var(--ink);font-family:var(--serif);font-size:15px;letter-spacing:2px}
+
+/* Announcement dialog */
+.announcement-overlay{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;
+  background:var(--veil);animation:fade .25s ease}
+.announcement-box{width:100%;max-width:410px;padding:34px 28px 28px;background:var(--paper);border:1px solid var(--ink);
+  box-shadow:9px 9px 0 var(--red);text-align:left}
+.announcement-icon{margin-bottom:10px;color:var(--red);font-size:26px;line-height:1}
+.announcement-box h2{margin-bottom:12px;font-family:var(--serif);font-size:34px;font-weight:700;line-height:1.1}
+.announcement-box p{margin-bottom:26px;color:var(--soft);font-size:15px;line-height:1.7}
+.announcement-actions{display:flex;flex-direction:column;gap:10px}
+.announcement-btn{display:block;width:100%;padding:13px 18px;font:600 14.5px var(--sans);text-align:center;text-decoration:none;cursor:pointer;transition:.2s ease}
+.announcement-btn.primary{background:var(--ink);border:1px solid var(--ink);color:var(--paper)}
+.announcement-btn.primary:hover{background:var(--red);border-color:var(--red)}
+.announcement-btn.secondary{background:transparent;border:1px solid var(--ink);color:var(--ink)}
+.announcement-btn.secondary:hover{background:var(--ink);color:var(--paper)}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+/* Responsive */
+@media (max-width:1000px){
+  .layout{display:block;column-gap:0}
+  .hero{padding:44px 0 30px}
+  .apk-section{padding:24px 0 40px}
+  .visitor-analytics{margin-bottom:44px}
+}
+@media (max-width:640px){
+  .brand-name{font-size:17px;letter-spacing:2px}
+  .apk-card{gap:14px;padding:18px 2px}
+  .apk-card:hover{padding-left:8px;padding-right:8px}
+  .apk-icon{width:54px;height:54px}
+  .apk-info{display:block}
+  .apk-name{font-size:20px}
+  .apk-tag{display:inline-block;margin-top:9px}
+  .apk-updated{margin-top:8px;font-size:12.5px}
+  .social-menu{right:10px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<!-- Announcement Dialog -->
+<div class="announcement-overlay" id="announcement" role="dialog" aria-modal="true" aria-labelledby="announcementTitle">
+  <div class="announcement-box">
+    <div class="announcement-icon">✦</div>
+    <h2 id="announcementTitle">Welcome ♡</h2>
+    <p>
+      Thanks for reaching out to us 😀.
+      Although everything is free, a simple follow will be appreciated ☺️.
+      Keep supporting us, and have a good day ☺️
+    </p>
+    <div class="announcement-actions">
+      <a href="https://www.instagram.com/_bhak__bsdk" class="announcement-btn primary" target="_blank" rel="noopener noreferrer">Sure</a>
+      <button class="announcement-btn secondary" onclick="closeAnnouncement()">Continue</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="brand">
+      <!-- Replace with your hosted logo -->
+      <img class="brand-logo" src="./ig.png" alt="MURMU MODS Logo">
+      <span class="brand-name">MURMU <span>MODS</span></span>
+    </a>
+    <div class="header-actions">
+      <button class="menu-button" id="themeButton" type="button" aria-label="Theme: auto (system)" title="Theme: auto (system)"></button>
+      <button class="menu-button" id="menuButton" aria-label="Open social links" aria-expanded="false">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- SOCIAL MENU -->
+<div class="social-menu" id="socialMenu">
+  <div class="menu-title">Connect with us</div>
+
+  <a class="social-link" href="https://www.instagram.com/_bhak__bsdk" target="_blank" rel="noopener noreferrer">
+    <span class="social-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6"/></svg></span>
+    <span class="social-text">Instagram [Main]</span>
+    <span class="social-arrow">›</span>
+  </a>
+
+  <a class="social-link" href="https://www.instagram.com/a_hopon_babu_" target="_blank" rel="noopener noreferrer">
+    <span class="social-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6"/></svg></span>
+    <span class="social-text">Instagram [2nd]</span>
+    <span class="social-arrow">›</span>
+  </a>
+
+  <a class="social-link" href="https://st-w4rriors.github.io" target="_blank" rel="noopener noreferrer">
+    <span class="social-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></span>
+    <span class="social-text">St <span style="color:var(--bad)">Warriors</span></span>
+    <span class="social-arrow">›</span>
+  </a>
+
+  <a class="social-link" href="https://13ijay.github.io" target="_blank" rel="noopener noreferrer">
+    <span class="social-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg></span>
+    <span class="social-text">Myself</span>
+    <span class="social-arrow">›</span>
+  </a>
+</div>
+
+<div class="layout">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">Modded apps, tools &amp; updates</div>
+    <h1>MURMU MODS</h1>
+    <p>Discover useful modified apps and tools, collected in one clean and simple place.</p>
+
+    <div class="search-wrapper">
+      <span class="search-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></span>
+      <input type="search" id="searchInput" class="search-box" placeholder="Search for an APK..." autocomplete="off">
+    </div>
+  </section>
+
+  <!-- APK LIST -->
+  <section class="apk-section">
+
+    <div class="section-title">
+      <h2>Latest APKs</h2>
+      <span class="apk-count" id="apkCount">0 APKs</span>
+    </div>
+
+    <div class="apk-grid" id="apkGrid">
+
+<!-- APK_LIST_START -->
+
+<!-- APK:movieboxpro -->
+<a href="apps/movieboxpro.html" class="apk-card" data-name="MovieBox [ Pro ]">
+    <img class="apk-icon" src="https://raw.githubusercontent.com/l4-l4mbu/L4-L4mbU.github.io/main/movieboxpro-logo.png" alt="MovieBox [ Pro ]">
+    <div class="apk-info">
+        <div class="apk-name">MovieBox [ Pro ]</div>
+        <div class="apk-version">Version 4.0.03.0930.03 [updated]</div>
+        <span class="apk-tag">Entertainment</span>
+        <div class="apk-updated">↻ Updated 15 Oct 2026, 08:16 am IST</div>
+    </div>
+    <span class="view-arrow">›</span>
+</a>
+<!-- /APK:movieboxpro -->
+
+<!-- APK:capcutpro -->
+<a href="apps/capcutpro.html" class="apk-card" data-name="Capcut [ Pro ]">
+    <img class="apk-icon" src="https://imgdb.in/i/h737yDWi8E.png" alt="Capcut [ Pro ]">
+    <div class="apk-info">
+        <div class="apk-name">Capcut [ Pro ]</div>
+        <div class="apk-version">Version 19.8.0 [ updated ]</div>
+        <span class="apk-tag">Tool</span>
+        <div class="apk-updated">↻ Updated 07 Oct 2026, 08:41 am IST</div>
+    </div>
+    <span class="view-arrow">›</span>
+</a>
+<!-- /APK:capcutpro -->
+
+<!-- APK:youtubepremium -->
+<a href="apps/youtubepremium.html" class="apk-card" data-name="YouTube [ Premium ]">
+    <img class="apk-icon" src="https://imgdb.in/i/gTPaHnsJBC.png" alt="YouTube [ Premium ]">
+    <div class="apk-info">
+        <div class="apk-name">YouTube [ Premium ]</div>
+        <div class="apk-version">Version 21.10.493</div>
+        <span class="apk-tag">Entertainment</span>
+    </div>
+    <span class="view-arrow">›</span>
+</a>
+<!-- /APK:youtubepremium -->
+
+<!-- APK:pawxyvpnpremium -->
+<a href="apps/pawxyvpnpremium.html" class="apk-card" data-name="Pawxy Vpn [ Premium ]">
+    <img class="apk-icon" src="https://imgdb.in/i/gU1leDvmOk.png" alt="Pawxy Vpn [ Premium ]">
+    <div class="apk-info">
+        <div class="apk-name">Pawxy Vpn [ Premium ]</div>
+        <div class="apk-version">Version 1.14.0</div>
+        <span class="apk-tag">Other</span>
+    </div>
+    <span class="view-arrow">›</span>
+</a>
+<!-- /APK:pawxyvpnpremium -->
+
+<!-- APK:picsartpro -->
+<a href="apps/picsartpro.html" class="apk-card" data-name="PicsArt [ Pro ]">
+    <img class="apk-icon" src="https://imgdb.in/i/gWpl3J7knC.png" alt="PicsArt [ Pro ]">
+    <div class="apk-info">
+        <div class="apk-name">PicsArt [ Pro ]</div>
+        <div class="apk-version">Version 30.6.4</div>
+        <span class="apk-tag">Tool</span>
+    </div>
+    <span class="view-arrow">›</span>
+</a>
+<!-- /APK:picsartpro -->
+
+<!-- APK:truecallergold -->
+<a href="apps/truecallergold.html" class="apk-card" data-name="Truecaller [ Gold ]">
+    <img class="apk-icon" src="https://imgdb.in/i/gUOfSRMnAs.png" alt="Truecaller [ Gold ]">
+    <div class="apk-info">
+        <div class="apk-name">Truecaller [ Gold ]</div>
+        <div class="apk-version">Version 26.33.6</div>
+        <span class="apk-tag">Social</span>
+    </div>
+    <span class="view-arrow">›</span>
+</a>
+<!-- /APK:truecallergold -->
+
+<!-- APK:lightroompremium -->
+<a href="apps/lightroompremium.html" class="apk-card" data-name="Lightroom [ Premium ]">
+    <img class="apk-icon" src="https://imgdb.in/i/gUH8cjXmGA.png" alt="Lightroom [ Premium ]">
+    <div class="apk-info">
+        <div class="apk-name">Lightroom [ Premium ]</div>
+        <div class="apk-version">Version 11.5.0</div>
+        <span class="apk-tag">Tool</span>
+    </div>
+    <span class="view-arrow">›</span>
+</a>
+<!-- /APK:lightroompremium -->
+
+<!-- APK_LIST_END -->
+
+    </div>
+
+    <div class="no-results" id="noResults">No APK found.</div>
+
+  </section>
+
+  <!-- APK_LIST_END -->
+
+  <!-- VISITOR ANALYTICS -->
+  <section class="visitor-analytics">
+    <div class="visitor-title">
+      <h3>Visitor Analytics</h3>
+      <span class="visitor-status" id="visitorStatus">● Connecting...</span>
+    </div>
+    <div class="visitor-stats">
+      <div class="visitor-stat"><b id="visitorTotal">0</b><span>Total unique</span></div>
+      <div class="visitor-stat"><b id="visitorToday">0</b><span>Today</span></div>
+      <div class="visitor-stat"><b id="visitorLive">0</b><span>Live now</span></div>
+    </div>
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+    © 2026 <strong>MURMU MODS</strong>. All rights reserved.
+</footer>
+
+<script>
+/* SEARCH */
+const searchInput = document.getElementById("searchInput");
+const apkCards = document.querySelectorAll(".apk-card");
+const noResults = document.getElementById("noResults");
+const apkCount = document.getElementById("apkCount");
+
+function updateCount() {
+    let visibleCount = 0;
+    apkCards.forEach(card => {
+        if (card.style.display !== "none") visibleCount++;
+    });
+    apkCount.textContent = visibleCount + (visibleCount === 1 ? " APK" : " APKs");
+}
+
+searchInput.addEventListener("input", function () {
+    const query = this.value.toLowerCase().trim();
+    let found = false;
+
+    apkCards.forEach(card => {
+        const name = (card.dataset.name || card.querySelector(".apk-name").textContent).toLowerCase();
+        if (name.includes(query)) {
+            card.style.display = "flex";
+            found = true;
+        } else {
+            card.style.display = "none";
+        }
+    });
+
+    noResults.style.display = found ? "none" : "block";
+    updateCount();
+});
+
+/* SOCIAL MENU */
+const menuButton = document.getElementById("menuButton");
+const socialMenu = document.getElementById("socialMenu");
+
+menuButton.addEventListener("click", function (event) {
+    event.stopPropagation();
+    const isOpen = socialMenu.classList.toggle("show");
+    menuButton.classList.toggle("active", isOpen);
+    menuButton.setAttribute("aria-expanded", isOpen);
+    menuButton.textContent = isOpen ? "×" : "☰";
+});
+
+/* Close menu when clicking outside */
+document.addEventListener("click", function (event) {
+    if (!socialMenu.contains(event.target) && !menuButton.contains(event.target)) {
+        socialMenu.classList.remove("show");
+        menuButton.classList.remove("active");
+        menuButton.setAttribute("aria-expanded", "false");
+        menuButton.textContent = "☰";
+    }
+});
+
+/* Initial count */
+updateCount();
+</script>
+
+<script>
+/* THEME: system (default), light or dark */
+const THEME_KEY = "murmu_mods_theme";
+const themeButton = document.getElementById("themeButton");
+const themeColor = document.getElementById("themeColor");
+const darkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+const modes = ["system", "light", "dark"];
+const labels = { system: "Theme: auto (system)", light: "Theme: light", dark: "Theme: dark" };
+const icons = {
+    system: '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M8 20h8M12 16v4"/></svg>',
+    light: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.4 1.4M17.6 17.6L19 19M5 19l1.4-1.4M17.6 6.4L19 5"/></svg>',
+    dark: '<svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>'
+};
+
+function getThemeMode() {
+    try {
+        const saved = localStorage.getItem(THEME_KEY);
+        return saved === "light" || saved === "dark" ? saved : "system";
+    } catch (_) {
+        return "system";
+    }
+}
+
+function applyTheme(mode) {
+    const root = document.documentElement;
+
+    if (mode === "system") root.removeAttribute("data-theme");
+    else root.setAttribute("data-theme", mode);
+
+    const isDark = mode === "dark" || (mode === "system" && darkQuery.matches);
+    themeColor.setAttribute("content", isDark ? "#121114" : "#e8e4dc");
+
+    themeButton.innerHTML = icons[mode];
+    themeButton.setAttribute("aria-label", labels[mode]);
+    themeButton.title = labels[mode];
+}
+
+themeButton.addEventListener("click", function () {
+    const next = modes[(modes.indexOf(getThemeMode()) + 1) % modes.length];
+
+    try {
+        if (next === "system") localStorage.removeItem(THEME_KEY);
+        else localStorage.setItem(THEME_KEY, next);
+    } catch (_) {}
+
+    applyTheme(next);
+});
+
+darkQuery.addEventListener("change", function () {
+    if (getThemeMode() === "system") applyTheme("system");
+});
+
+applyTheme(getThemeMode());
+</script>
+
+<audio id="bgMusic" loop preload="auto">
+    <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const bgMusic = document.getElementById("bgMusic");
+
+function startMusic() {
+    bgMusic.play()
+        .then(() => {
+            document.removeEventListener("pointerdown", startMusic);
+        })
+        .catch(() => {
+            // Keep listener active if playback fails
+        });
+}
+
+document.addEventListener("pointerdown", startMusic);
+</script>
+
+<script>
+document.addEventListener("pointerdown", function (event) {
+
+    const flowers = ["🌸", "🌺", "🌼", "🌷", "💮"];
+    const count = 10;
+
+    for (let i = 0; i < count; i++) {
+
+        const flower = document.createElement("span");
+        flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+
+        flower.style.position = "fixed";
+        flower.style.left = event.clientX + "px";
+        flower.style.top = event.clientY + "px";
+        flower.style.pointerEvents = "none";
+        flower.style.fontSize = (14 + Math.random() * 12) + "px";
+        flower.style.zIndex = "9999";
+
+        document.body.appendChild(flower);
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 40 + Math.random() * 80;
+        const x = Math.cos(angle) * distance;
+        const y = Math.sin(angle) * distance;
+
+        flower.animate([
+            { transform: "translate(-50%, -50%) scale(0.3)", opacity: 1 },
+            { transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) scale(1)`, opacity: 0 }
+        ], {
+            duration: 1800,
+            easing: "cubic-bezier(.2,.8,.3,1)"
+        });
+
+        setTimeout(() => { flower.remove(); }, 1800);
+    }
+});
+</script>
+
+<script>
+function closeAnnouncement() {
+    document.getElementById("announcement").style.display = "none";
+}
+</script>
+
+<!-- FIREBASE VISITOR ANALYTICS -->
+<script type="module">
+
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+    getDatabase, ref, get, set, update, onValue, onDisconnect, runTransaction, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+/* FIREBASE CONFIG */
+const firebaseConfig = {
+    apiKey: "AIzaSyCd6e-psGHsyf_fBRPZ5FZCRwxE96GzuUU",
+    authDomain: "visitor-c2be9.firebaseapp.com",
+    databaseURL: "https://visitor-c2be9-default-rtdb.firebaseio.com",
+    projectId: "visitor-c2be9",
+    storageBucket: "visitor-c2be9.firebasestorage.app",
+    messagingSenderId: "937049664378",
+    appId: "1:937049664378:web:e086580c4eccbbe62d84c3"
+};
+
+/* SETTINGS */
+const APP_NAME = "murmuVisitorAnalytics";
+const VISITOR_KEY = "murmu_mods_visitor_id";
+
+/* ELEMENTS */
+const statusEl = document.getElementById("visitorStatus");
+const totalEl = document.getElementById("visitorTotal");
+const todayEl = document.getElementById("visitorToday");
+const liveEl = document.getElementById("visitorLive");
+
+/* STATUS */
+function setStatus(text, state = "") {
+    statusEl.textContent = "● " + text;
+    statusEl.className = "visitor-status " + state;
+}
+
+/* VISITOR ID */
+function getVisitorId() {
+    let id = localStorage.getItem(VISITOR_KEY);
+
+    if (!id) {
+        if (crypto.randomUUID) {
+            id = crypto.randomUUID();
+        } else {
+            id = "v-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+        }
+        localStorage.setItem(VISITOR_KEY, id);
+    }
+
+    return id;
+}
+
+/* INDIA DATE */
+function indiaDate() {
+    return new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+    }).format(new Date());
+}
+
+/* NUMBER FORMAT */
+function formatNumber(value) {
+    return Number(value || 0).toLocaleString("en-IN");
+}
+
+/* MAIN */
+async function startVisitorAnalytics() {
+
+    try {
+
+        /* Firebase app */
+        const app = getApps().some(a => a.name === APP_NAME)
+            ? getApp(APP_NAME)
+            : initializeApp(firebaseConfig, APP_NAME);
+
+        const db = getDatabase(app);
+
+        /* Visitor information */
+        const visitorId = getVisitorId();
+        const today = indiaDate();
+
+        /* Database paths */
+        const statsRef = ref(db, "visitors/analytics/stats");
+        const userRef = ref(db, "visitors/analytics/users/" + visitorId);
+        const todayRef = ref(db, "visitors/analytics/days/" + today + "/" + visitorId);
+        const liveRef = ref(db, "visitors/analytics/live/" + visitorId);
+
+        /* TOTAL UNIQUE */
+        const userSnap = await get(userRef);
+
+        if (!userSnap.exists()) {
+
+            await set(userRef, { firstSeen: serverTimestamp() });
+
+            await runTransaction(statsRef, current => {
+                current = current || {};
+                current.totalUnique = Number(current.totalUnique || 0) + 1;
+                return current;
+            });
+        }
+
+        /* TODAY UNIQUE */
+        const todaySnap = await get(todayRef);
+
+        if (!todaySnap.exists()) {
+            await set(todayRef, true);
+        }
+
+        /* LIVE VISITOR */
+        await onDisconnect(liveRef).remove();
+
+        await set(liveRef, { lastSeen: serverTimestamp() });
+
+        /* Heartbeat */
+        setInterval(async () => {
+            try {
+                await update(liveRef, { lastSeen: serverTimestamp() });
+            } catch (_) {}
+        }, 30000);
+
+        /* TOTAL */
+        onValue(statsRef, snapshot => {
+            const data = snapshot.val() || {};
+            totalEl.textContent = formatNumber(data.totalUnique);
+        });
+
+        /* TODAY */
+        const todayCollectionRef = ref(db, "visitors/analytics/days/" + today);
+
+        onValue(todayCollectionRef, snapshot => {
+            const data = snapshot.val() || {};
+            todayEl.textContent = formatNumber(Object.keys(data).length);
+        });
+
+        /* LIVE NOW */
+        const liveCollectionRef = ref(db, "visitors/analytics/live");
+
+        onValue(liveCollectionRef, snapshot => {
+            const data = snapshot.val() || {};
+            const now = Date.now();
+
+            const count = Object.values(data).filter(item => {
+                const timestamp = item && Number(item.lastSeen);
+                return timestamp && now - timestamp <= 90000;
+            }).length;
+
+            liveEl.textContent = formatNumber(count);
+        });
+
+        setStatus("Firebase connected", "connected");
+
+    } catch (error) {
+        console.error("Visitor analytics:", error);
+        setStatus("Analytics unavailable", "error");
+    }
+}
+
+startVisitorAnalytics();
+
+</script>
+
+</body>
+</html>
