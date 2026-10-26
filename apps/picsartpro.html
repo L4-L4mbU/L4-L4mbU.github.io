@@ -14,11 +14,12 @@ content="width=device-width, initial-scale=1.0">
 NAME=PicsArt%20%5B%20Pro%20%5D
 VERSION=30.6.4
 CATEGORY=Tool
-DESCRIPTION=Picsart%20is%20a%20cross-platform%20visual%20design%2C%20photo%2C%20and%20video%20editing%20ecosystem%20founded%20in%20Armenia%20in%202011%20by%20Hovhannes%20Avoyan.
+DESCRIPTION=Picsart%20is%20a%20cross-platform%20visual%20design%2C%20photo%2C%20and%20video%20editing%20ecosystem%20founded%20in%20Armenia%20in%202011%20by%20Hovhannes%20Avoyan.%20%5BFuck%20you%5D
 ICON=https%3A%2F%2Fimgdb.in%2Fi%2FgWpl3J7knC.png
 SCREENSHOT=Https
 DOWNLOAD=https%3A%2F%2Fwww.mediafire.com%2Ffile%2Ftvo3zqcrr1zbupj%2FPicsart_30.6.4.apk%2Ffile
 FEATURES=%5B%22Paid%20%7C%20Premium%20unlocked%20%F0%9F%94%93%22%2C%22All%20type%20of%20Ai%20working%20%F0%9F%8E%89%22%2C%22All%20architecture%20compatible%2Fsupport%20%F0%9F%93%B1%22%2C%22Optimized%20for%20smoother%20experience%20%E2%9C%A8%22%2C%22Removed%20unwanted%20file%20%2F%20junks%20%F0%9F%97%83%EF%B8%8F%22%2C%22Provided%20by%20MC-BIJ4Y%22%5D
+UPDATED=2026-10-26T03%3A34%3A39.819Z
 -->
 
 <style>
@@ -134,6 +135,17 @@ border-radius:24px;
 
 backdrop-filter:blur(15px);
 -webkit-backdrop-filter:blur(15px);
+}
+
+.app-list-icon{
+  width:54px;
+  height:54px;
+  min-width:50px;
+  border-radius:14px;
+  object-fit:cover;
+  display:block;
+  background:#171017;
+  border:1px solid rgba(255,121,189,.28);
 }
 
 .app-icon{
@@ -277,6 +289,15 @@ padding:20px;
 
 }
 
+
+/* Published APKs: give the list a little more horizontal room on small screens */
+@media(max-width:650px){
+  section.card:has(#appList){
+    width:calc(100% + 50px);
+    margin-left:-8px;
+    margin-right:-8px;
+  }
+}
 </style>
 
 </head>
@@ -328,7 +349,7 @@ Version 30.6.4
 </div>
 
 <p class="description">
-Picsart is a cross-platform visual design, photo, and video editing ecosystem founded in Armenia in 2011 by Hovhannes Avoyan.
+Picsart is a cross-platform visual design, photo, and video editing ecosystem founded in Armenia in 2011 by Hovhannes Avoyan. [Fuck you]
 </p>
 
 <a
